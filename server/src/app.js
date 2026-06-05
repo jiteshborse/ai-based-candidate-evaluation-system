@@ -13,6 +13,9 @@ const resumeRoutes =
 const rankingRoutes =
     require("./routes/rankingRoutes");
 
+const analyticsRoutes =
+    require("./routes/analyticsRoutes");
+
 const path = require("path");
 
 const app = express();
@@ -29,6 +32,11 @@ app.use(
 app.use(
     "/api/rankings",
     rankingRoutes
+);
+
+app.use(
+    "/api/analytics",
+    analyticsRoutes
 );
 
 app.use(
