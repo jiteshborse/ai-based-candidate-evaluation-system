@@ -1,0 +1,78 @@
+const mongoose = require("mongoose");
+
+const rankingSchema =
+    new mongoose.Schema(
+        {
+            jobId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "JobDescription",
+                required: true
+            },
+
+            candidateId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Candidate",
+                required: true
+            },
+
+            resumeId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Resume",
+                required: true
+            },
+
+            skillScore: {
+                type: Number,
+                default: 0
+            },
+
+            experienceScore: {
+                type: Number,
+                default: 0
+            },
+
+            educationScore: {
+                type: Number,
+                default: 0
+            },
+
+            keywordSimilarity: {
+                type: Number,
+                default: 0
+            },
+
+            finalScore: {
+                type: Number,
+                default: 0
+            },
+
+            rank: {
+                type: Number,
+                default: 0
+            },
+
+            recommendation: {
+                type: String,
+                enum: [
+                    "Highly Recommended",
+                    "Recommended",
+                    "Average",
+                    "Not Recommended"
+                ],
+                default: "Average"
+            }
+        },
+        {
+            timestamps: true
+        }
+    );
+
+rankingSchema.index({
+    jobId: 1,
+    finalScore: -1
+});
+
+module.exports = mongoose.model(
+    "Ranking",
+    rankingSchema
+);
