@@ -1,5 +1,9 @@
 require("dotenv").config();
 
+require(
+    "./config/validateEnv"
+);
+
 const app = require("./app");
 
 const connectDB =

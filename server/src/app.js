@@ -19,13 +19,45 @@ const analyticsRoutes =
 const reportRoutes =
     require("./routes/reportRoutes");
 
+const limiter =
+    require("./middleware/rateLimiter");
+
+const morgan =
+    require("morgan");
+
+const errorMiddleware =
+    require(
+        "./middleware/errorMiddleware"
+    );
+
 const path = require("path");
+
+const helmet = require("helmet");
 
 const app = express();
 
-app.use(cors());
+app.use(limiter);
+
+app.use(cors({
+
+    origin:
+        process.env.CLIENT_URL,
+
+    credentials: true
+
+}));
+
+app.use(helmet());
 
 app.use(express.json());
+
+app.use(
+    morgan("dev")
+);
+
+app.use(
+    errorMiddleware
+);
 
 app.use(
     "/api/auth",
