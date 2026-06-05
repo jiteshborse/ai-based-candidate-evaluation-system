@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+spacy
+yake
+scikit-learn
+pypdf

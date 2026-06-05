@@ -1,5 +1,6 @@
 const Resume = require("../models/Resume");
 const Candidate = require("../models/Candidate");
+const aiService = require("../services/aiService");
 
 exports.uploadResume = async (req, res) => {
 
@@ -39,6 +40,39 @@ exports.uploadResume = async (req, res) => {
                 aiStatus:
                     "pending"
             });
+
+        const aiData =
+            await aiService.parseResume(
+                req.file.path
+            );
+
+        resume.rawText =
+            aiData.rawText;
+
+        resume.extractedData = {
+
+            skills:
+                aiData.skills,
+
+            education:
+                aiData.education,
+
+            keywords:
+                aiData.keywords,
+
+            experience:
+                [
+                    {
+                        duration:
+                            aiData.experience
+                    }
+                ]
+        };
+
+        resume.aiStatus =
+            "completed";
+
+        await resume.save();
 
         res.status(201).json({
             success: true,
@@ -105,14 +139,14 @@ exports.deleteResume = async (req, res) => {
         res.status(200).json({
             success: true,
             message:
-            "Resume deleted"
+                "Resume deleted"
         });
 
-    } catch(error) {
+    } catch (error) {
 
         res.status(500).json({
-            success:false,
-            message:error.message
+            success: false,
+            message: error.message
         });
     }
 };
