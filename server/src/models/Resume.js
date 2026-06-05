@@ -25,23 +25,21 @@ const resumeSchema = new mongoose.Schema(
 
         extractedData: {
 
+            name: String,
+
+            email: String,
+
+            phone: String,
+
+            location: String,
+
             skills: [String],
 
-            education: [
-                {
-                    degree: String,
-                    institution: String,
-                    year: Number
-                }
-            ],
+            education: [String],
 
-            experience: [
-                {
-                    company: String,
-                    role: String,
-                    duration: String
-                }
-            ],
+            projects: [String],
+
+            certifications: [String],
 
             keywords: [String]
         },

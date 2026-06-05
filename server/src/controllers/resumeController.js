@@ -51,22 +51,23 @@ exports.uploadResume = async (req, res) => {
 
         resume.extractedData = {
 
-            skills:
-                aiData.skills,
+            name: aiData.name,
 
-            education:
-                aiData.education,
+            email: aiData.email,
 
-            keywords:
-                aiData.keywords,
+            phone: aiData.phone,
 
-            experience:
-                [
-                    {
-                        duration:
-                            aiData.experience
-                    }
-                ]
+            location: aiData.location,
+
+            skills: aiData.skills,
+
+            education: aiData.education,
+
+            projects: aiData.projects,
+
+            certifications: aiData.certifications,
+
+            keywords: aiData.keywords
         };
 
         resume.aiStatus =

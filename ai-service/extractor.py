@@ -76,3 +76,30 @@ def extract_experience(text):
         return int(matches[0])
 
     return 0
+
+def extract_name(text):
+
+    doc = nlp(text[:1000])
+
+    for ent in doc.ents:
+
+        if ent.label_ == "PERSON":
+            return ent.text
+
+    return ""
+
+def extract_location(text):
+
+    doc = nlp(text[:1500])
+
+    locations = []
+
+    for ent in doc.ents:
+
+        if ent.label_ in ["GPE", "LOC"]:
+
+            locations.append(
+                ent.text
+            )
+
+    return locations[0] if locations else ""

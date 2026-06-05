@@ -122,6 +122,13 @@ exports.generateRanking =
                         job.experienceMin
                     );
 
+                const skillGap =
+                    await skillGapService
+                        .analyzeSkillGap(
+                            resume.extractedData.skills,
+                            job.requiredSkills
+                        );
+
                 const educationScore =
                     calculateEducationScore(
                         resume.extractedData.education,
