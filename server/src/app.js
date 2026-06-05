@@ -7,6 +7,11 @@ const authRoutes =
 const jobRoutes =
     require("./routes/jobRoutes");
 
+const resumeRoutes =
+require("./routes/resumeRoutes");
+
+const path = require("path");
+
 const app = express();
 
 app.use(cors());
@@ -21,6 +26,19 @@ app.use(
 app.use(
     "/api/jobs",
     jobRoutes
+);
+
+app.use(
+    "/api/resumes",
+    resumeRoutes
+);
+
+app.use(
+    "/uploads",
+    express.static(
+        path.join(__dirname,
+        "../uploads")
+    )
 );
 
 module.exports = app;
