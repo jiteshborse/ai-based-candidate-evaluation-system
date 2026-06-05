@@ -16,6 +16,9 @@ const rankingRoutes =
 const analyticsRoutes =
     require("./routes/analyticsRoutes");
 
+const reportRoutes =
+    require("./routes/reportRoutes");
+
 const path = require("path");
 
 const app = express();
@@ -32,6 +35,11 @@ app.use(
 app.use(
     "/api/rankings",
     rankingRoutes
+);
+
+app.use(
+    "/api/reports",
+    reportRoutes
 );
 
 app.use(
@@ -54,6 +62,16 @@ app.use(
     express.static(
         path.join(__dirname,
             "../uploads")
+    )
+);
+
+app.use(
+    "/reports",
+    express.static(
+        path.join(
+            __dirname,
+            "../reports"
+        )
     )
 );
 
