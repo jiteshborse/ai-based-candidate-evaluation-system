@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from parser import extract_text
+from matcher import calculate_similarity
 
 from extractor import (
     extract_skills,
@@ -36,4 +37,20 @@ def parse_resume(data: dict):
         "keywords": keywords,
 
         "rawText": text
+    }
+    
+@app.post("/rank-candidate")
+def rank_candidate(data: dict):
+
+    resume_text = data["resumeText"]
+    job_text = data["jobText"]
+
+    similarity = calculate_similarity(
+        resume_text,
+        job_text
+    )
+
+    return {
+        "keywordSimilarity":
+        similarity
     }

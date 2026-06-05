@@ -8,7 +8,10 @@ const jobRoutes =
     require("./routes/jobRoutes");
 
 const resumeRoutes =
-require("./routes/resumeRoutes");
+    require("./routes/resumeRoutes");
+
+const rankingRoutes =
+    require("./routes/rankingRoutes");
 
 const path = require("path");
 
@@ -21,6 +24,11 @@ app.use(express.json());
 app.use(
     "/api/auth",
     authRoutes
+);
+
+app.use(
+    "/api/rankings",
+    rankingRoutes
 );
 
 app.use(
@@ -37,7 +45,7 @@ app.use(
     "/uploads",
     express.static(
         path.join(__dirname,
-        "../uploads")
+            "../uploads")
     )
 );
 
