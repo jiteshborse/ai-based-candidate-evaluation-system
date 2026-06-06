@@ -6,6 +6,7 @@ import {
 
 import Profile from "../pages/candidate/Profile";
 import UploadResume from "../pages/candidate/UploadResume";
+import MyResumes from "../pages/candidate/MyResumes";
 
 import Jobs from "../pages/recruiter/Jobs";
 import Rankings from "../pages/recruiter/Rankings";
@@ -106,6 +107,15 @@ function AppRoutes() {
                     element={
                         <ProtectedRoute>
                             <Reports />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/my-resumes"
+                    element={
+                        <ProtectedRoute>
+                            <MyResumes />
                         </ProtectedRoute>
                     }
                 />

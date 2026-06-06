@@ -10,10 +10,21 @@ import {
     useNavigate
 } from "react-router-dom";
 
+import {
+    loginUser
+} from "../../services/authService";
+
+import {
+    useAuth
+} from "../../context/AuthContext";
+
 function Register() {
 
     const navigate =
         useNavigate();
+
+    const { login } =
+        useAuth();
 
     const [formData,
         setFormData] =
@@ -48,11 +59,26 @@ function Register() {
                     formData
                 );
 
+                const data =
+                    await loginUser(
+                        {
+                            email:
+                                formData.email,
+                            password:
+                                formData.password
+                        }
+                    );
+
+                login(
+                    data.token,
+                    data.user
+                );
+
                 alert(
                     "Registration Successful"
                 );
 
-                navigate("/login");
+                navigate("/dashboard");
 
             } catch (error) {
 

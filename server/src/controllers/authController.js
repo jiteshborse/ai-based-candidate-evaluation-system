@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Candidate = require("../models/Candidate");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken");
 
@@ -32,6 +33,12 @@ exports.register = async (req, res) => {
                 password: hashedPassword,
                 role
             });
+
+        if (role === "candidate") {
+            await Candidate.create({
+                userId: user._id
+            });
+        }
 
         res.status(201).json({
             success: true,

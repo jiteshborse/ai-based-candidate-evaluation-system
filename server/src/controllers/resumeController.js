@@ -12,12 +12,11 @@ exports.uploadResume = async (req, res) => {
                 userId: req.user.id
             });
 
-        if (!candidate) {
-            return res.status(404).json({
-                success: false,
-                message: "Candidate profile not found"
+        const activeCandidate =
+            candidate ||
+            await Candidate.create({
+                userId: req.user.id
             });
-        }
 
         if (!req.file) {
             return res.status(400).json({
@@ -30,7 +29,7 @@ exports.uploadResume = async (req, res) => {
             await Resume.create({
 
                 candidateId:
-                    candidate._id,
+                    activeCandidate._id,
 
                 fileName:
                     req.file.filename,

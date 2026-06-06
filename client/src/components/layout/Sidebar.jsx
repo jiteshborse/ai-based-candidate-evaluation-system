@@ -58,6 +58,12 @@ function Sidebar() {
                             >
                                 Upload Resume
                             </Link>
+
+                            <Link
+                                to="/my-resumes"
+                            >
+                                My Resumes
+                            </Link>
                         </>
                     )}
 
