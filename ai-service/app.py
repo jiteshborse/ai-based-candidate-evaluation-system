@@ -1,12 +1,22 @@
 from ats_engine import *
 from fastapi import FastAPI
 from parser import extract_text
+import os
+import base64
+import io
 from matcher import calculate_similarity
 
 from skill_gap import (
     analyze_skill_gap,
     candidate_readiness,
     generate_recommendations
+)
+
+from comparison import (
+    overall_candidate_score,
+    determine_winner,
+    compare_advantages,
+    comparison_recommendation
 )
 
 from explainability import (
@@ -63,9 +73,47 @@ app = FastAPI()
 @app.post("/parse-resume")
 def parse_resume(data: dict):
 
-    path = data["filePath"]
+    # Support either a direct file path (legacy) or a base64 fileContent + fileName
+    if "fileContent" in data:
 
-    text = extract_text(path)
+        file_name = data.get("fileName", "resume")
+        extension = os.path.splitext(file_name)[1].lower()
+
+        file_bytes = base64.b64decode(data["fileContent"])
+
+        if extension == ".pdf":
+            from pypdf import PdfReader
+
+            reader = PdfReader(io.BytesIO(file_bytes))
+
+            text = ""
+
+            for page in reader.pages:
+                text += page.extract_text() or ""
+
+        elif extension == ".docx":
+            from docx import Document
+
+            document = Document(io.BytesIO(file_bytes))
+            paragraphs = [p.text for p in document.paragraphs]
+            text = "\n".join(paragraphs)
+
+        elif extension == ".txt":
+            text = file_bytes.decode("utf-8", errors="ignore")
+
+        else:
+            raise Exception(f"Unsupported file type: {extension}")
+
+    else:
+
+        path = data["filePath"]
+        file_type = (
+            os.path.splitext(
+                path
+            )[1]
+        )
+
+        text = extract_text(path)
 
     return {
 
@@ -393,4 +441,66 @@ def ats_score(data: dict):
             "certifications":
                 certifications
         }
+    }
+    
+@app.post("/compare-candidates")
+def compare_candidates(
+    data: dict
+):
+
+    candidate_a = data["candidateA"]
+
+    candidate_b = data["candidateB"]
+
+    score_a = overall_candidate_score(
+
+            candidate_a["finalScore"],
+
+            candidate_a["atsScore"],
+
+            candidate_a["confidence"]
+        )
+
+    score_b = overall_candidate_score(
+
+            candidate_b["finalScore"],
+
+            candidate_b["atsScore"],
+
+            candidate_b["confidence"]
+        )
+
+    winner = determine_winner(
+            score_a,
+            score_b
+        )
+
+    advantages = compare_advantages(
+            candidate_a,
+            candidate_b
+        )
+
+    recommendation = comparison_recommendation(
+            winner
+        )
+
+    return {
+
+        "winner":
+            winner,
+
+        "comparisonScore": {
+
+            "candidateA":
+                score_a,
+
+            "candidateB":
+                score_b
+        },
+
+        "advantages":
+            advantages,
+
+        "recommendation":
+            recommendation
     }

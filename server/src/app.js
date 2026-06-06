@@ -1,6 +1,11 @@
 const express = require("express");
 const cors = require("cors");
 
+const comparisonRoutes =
+    require(
+        "./routes/comparisonRoutes"
+    );
+
 const authRoutes =
     require("./routes/authRoutes");
 
@@ -62,6 +67,11 @@ app.use(
 app.use(
     "/api/auth",
     authRoutes
+);
+
+app.use(
+    "/api/comparison",
+    comparisonRoutes
 );
 
 app.use(

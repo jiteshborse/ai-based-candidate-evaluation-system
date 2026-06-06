@@ -21,9 +21,12 @@ const storage = multer.diskStorage({
 const fileFilter = (req, file, cb) => {
 
     const allowedTypes = [
+
         ".pdf",
-        ".doc",
-        ".docx"
+
+        ".docx",
+
+        ".txt"
     ];
 
     const ext =
@@ -35,7 +38,7 @@ const fileFilter = (req, file, cb) => {
     } else {
         cb(
             new Error(
-                "Only PDF, DOC and DOCX files are allowed"
+                "Only PDF, DOCX and TXT files are allowed"
             )
         );
     }

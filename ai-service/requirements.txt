@@ -4,3 +4,7 @@ spacy
 yake
 scikit-learn
 pypdf
+python-docx
+
+# Note: install spaCy model separately:
+#   python -m spacy download en_core_web_sm

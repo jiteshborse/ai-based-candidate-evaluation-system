@@ -1,6 +1,7 @@
 const Resume = require("../models/Resume");
 const Candidate = require("../models/Candidate");
 const aiService = require("../services/aiService");
+const path = require("path");
 
 exports.uploadResume = async (req, res) => {
 
@@ -33,6 +34,11 @@ exports.uploadResume = async (req, res) => {
 
                 fileName:
                     req.file.filename,
+
+                fileType:
+                    path.extname(
+                        req.file.filename
+                    ),
 
                 fileUrl:
                     req.file.path,
