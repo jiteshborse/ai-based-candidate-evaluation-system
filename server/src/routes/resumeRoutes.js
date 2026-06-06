@@ -14,7 +14,8 @@ const upload =
 const {
     uploadResume,
     getResume,
-    deleteResume
+    deleteResume,
+    getMyResumes
 } = require(
     "../controllers/resumeController"
 );
@@ -32,6 +33,12 @@ router.post(
     upload.single("resume"),
 
     uploadResume
+);
+
+router.get(
+    "/",
+    authMiddleware,
+    getMyResumes
 );
 
 router.get(

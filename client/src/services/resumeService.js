@@ -16,6 +16,15 @@ export const uploadResume = async (formData) => {
     return response.data;
 };
 
+export const getResumes = async () => {
+
+    const response = await api.get(
+        "/resumes"
+    );
+
+    return response.data;
+};
+
 export const getResume = async (id) => {
 
     const response = await api.get(

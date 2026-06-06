@@ -10,9 +10,14 @@ exports.generatePDF = async (
     const fileName =
         `report-${Date.now()}.pdf`;
 
+    const reportsDir = path.join(__dirname, "../../reports");
+    if (!fs.existsSync(reportsDir)) {
+        fs.mkdirSync(reportsDir, { recursive: true });
+    }
+
     const reportPath =
         path.join(
-            "reports",
+            reportsDir,
             fileName
         );
 

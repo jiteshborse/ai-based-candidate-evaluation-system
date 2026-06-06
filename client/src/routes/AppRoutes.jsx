@@ -7,11 +7,13 @@ import {
 import Profile from "../pages/candidate/Profile";
 import UploadResume from "../pages/candidate/UploadResume";
 import MyResumes from "../pages/candidate/MyResumes";
+import BrowseJobs from "../pages/candidate/BrowseJobs";
 
 import Jobs from "../pages/recruiter/Jobs";
 import Rankings from "../pages/recruiter/Rankings";
 import Analytics from "../pages/recruiter/Analytics";
 import Reports from "../pages/recruiter/Reports";
+import CandidateComparison from "../pages/recruiter/CandidateComparison";
 
 import Login from
     "../pages/auth/Login";
@@ -24,6 +26,9 @@ import Dashboard from
 
 import Landing from
     "../pages/Landing";
+
+import NotFound from
+    "../pages/NotFound";
 
 import ProtectedRoute from
     "./ProtectedRoute";
@@ -115,6 +120,24 @@ function AppRoutes() {
                 />
 
                 <Route
+                    path="/comparison"
+                    element={
+                        <ProtectedRoute>
+                            <CandidateComparison />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/browse-jobs"
+                    element={
+                        <ProtectedRoute>
+                            <BrowseJobs />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
                     path="/my-resumes"
                     element={
                         <ProtectedRoute>
@@ -126,6 +149,11 @@ function AppRoutes() {
                 <Route
                     path="/"
                     element={<Landing />}
+                />
+
+                <Route
+                    path="*"
+                    element={<NotFound />}
                 />
 
             </Routes>

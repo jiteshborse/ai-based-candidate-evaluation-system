@@ -72,7 +72,9 @@ exports.uploadResume = async (req, res) => {
 
             certifications: aiData.certifications,
 
-            keywords: aiData.keywords
+            keywords: aiData.keywords,
+
+            experience: aiData.experience || 0
         };
 
         resume.aiStatus =
@@ -146,6 +148,39 @@ exports.deleteResume = async (req, res) => {
             success: true,
             message:
                 "Resume deleted"
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+exports.getMyResumes = async (req, res) => {
+    try {
+        const candidate =
+            await Candidate.findOne({
+                userId: req.user.id
+            });
+
+        if (!candidate) {
+            return res.status(404).json({
+                success: false,
+                message: "Candidate profile not found"
+            });
+        }
+
+        const resumes =
+            await Resume.find({
+                candidateId: candidate._id
+            });
+
+        res.status(200).json({
+            success: true,
+            data: resumes
         });
 
     } catch (error) {

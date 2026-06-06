@@ -24,6 +24,9 @@ const analyticsRoutes =
 const reportRoutes =
     require("./routes/reportRoutes");
 
+const applicationRoutes =
+    require("./routes/applicationRoutes");
+
 const limiter =
     require("./middleware/rateLimiter");
 
@@ -43,41 +46,23 @@ const app = express();
 
 const allowedOrigins = [
     process.env.CLIENT_URL,
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://127.0.0.1:5173"
 ].filter(Boolean);
 
-app.use(limiter);
-
 app.use(cors({
-
     origin: function (origin, callback) {
-
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (!origin || allowedOrigins.includes(origin) || origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:")) {
             callback(null, true);
             return;
         }
-
-        callback(new Error("Not allowed by CORS"));
-    },
-
-    credentials: true,
-    optionsSuccessStatus: 200
-
-}));
-
-app.options("*", cors({
-    origin: function (origin, callback) {
-
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-            return;
-        }
-
         callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
     optionsSuccessStatus: 200
 }));
+
+app.use(limiter);
 
 app.use(helmet());
 
@@ -85,10 +70,6 @@ app.use(express.json());
 
 app.use(
     morgan("dev")
-);
-
-app.use(
-    errorMiddleware
 );
 
 app.use(
@@ -127,6 +108,11 @@ app.use(
 );
 
 app.use(
+    "/api/applications",
+    applicationRoutes
+);
+
+app.use(
     "/uploads",
     express.static(
         path.join(__dirname,
@@ -142,6 +128,10 @@ app.use(
             "../reports"
         )
     )
+);
+
+app.use(
+    errorMiddleware
 );
 
 module.exports = app;

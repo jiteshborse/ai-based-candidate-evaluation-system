@@ -45,7 +45,12 @@ const resumeSchema = new mongoose.Schema(
 
             certifications: [String],
 
-            keywords: [String]
+            keywords: [String],
+
+            experience: {
+                type: Number,
+                default: 0
+            }
         },
 
         aiStatus: {

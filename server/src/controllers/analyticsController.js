@@ -29,6 +29,37 @@ exports.getDashboardStats =
             const totalResumes =
                 await Resume.countDocuments();
 
+            // Calculate ATS score distribution
+            const rankings = await Ranking.find({}, "atsAnalysis.atsScore");
+            const brackets = { "90-100": 0, "80-89": 0, "70-79": 0, "60-69": 0, "Under 60": 0 };
+            rankings.forEach(r => {
+                const score = r.atsAnalysis?.atsScore || 0;
+                if (score >= 90) brackets["90-100"]++;
+                else if (score >= 80) brackets["80-89"]++;
+                else if (score >= 70) brackets["70-79"]++;
+                else if (score >= 60) brackets["60-69"]++;
+                else brackets["Under 60"]++;
+            });
+            const atsDistribution = Object.keys(brackets).map(range => ({ range, count: brackets[range] }));
+
+            // Aggregate Top Skills from jobs
+            const topSkillsRaw = await JobDescription.aggregate([
+                { $unwind: "$requiredSkills" },
+                { $group: { _id: "$requiredSkills", count: { $sum: 1 } } },
+                { $sort: { count: -1 } },
+                { $limit: 8 }
+            ]);
+            const topSkills = topSkillsRaw.map(item => ({ skill: item._id, count: item.count }));
+
+            // Aggregate hiring recommendation stats
+            const recStatsRaw = await Ranking.aggregate([
+                { $group: { _id: "$recommendation", count: { $sum: 1 } } }
+            ]);
+            const recommendationStats = ["Highly Recommended", "Recommended", "Average", "Not Recommended"].map(name => {
+                const match = recStatsRaw.find(item => item._id === name);
+                return { name, value: match ? match.count : 0 };
+            });
+
             res.status(200).json({
 
                 success: true,
@@ -45,7 +76,13 @@ exports.getDashboardStats =
 
                     totalApplications,
 
-                    totalResumes
+                    totalResumes,
+
+                    atsDistribution,
+
+                    topSkills,
+
+                    recommendationStats
 
                 }
 

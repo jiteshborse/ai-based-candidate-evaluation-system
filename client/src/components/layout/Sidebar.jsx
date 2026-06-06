@@ -54,6 +54,12 @@ function Sidebar() {
                             </Link>
 
                             <Link
+                                to="/browse-jobs"
+                            >
+                                Browse Jobs
+                            </Link>
+
+                            <Link
                                 to="/upload-resume"
                             >
                                 Upload Resume
@@ -81,6 +87,12 @@ function Sidebar() {
                                 to="/rankings"
                             >
                                 Rankings
+                            </Link>
+
+                            <Link
+                                to="/comparison"
+                            >
+                                Comparison
                             </Link>
 
                             <Link
