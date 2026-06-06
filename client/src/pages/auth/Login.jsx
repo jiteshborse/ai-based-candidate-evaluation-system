@@ -14,6 +14,8 @@ import {
     useAuth
 } from "../../context/AuthContext";
 
+import toast from "react-hot-toast";
+
 function Login() {
 
     const navigate =
@@ -65,11 +67,8 @@ function Login() {
 
             } catch (error) {
 
-                alert(
-                    error.response
-                        ?.data?.message
-                    ||
-                    "Login Failed"
+                toast.error(
+                    error.response?.data?.message || "Something went wrong"
                 );
             }
         };

@@ -22,6 +22,9 @@ import Register from
 import Dashboard from
     "../pages/Dashboard";
 
+import Landing from
+    "../pages/Landing";
+
 import ProtectedRoute from
     "./ProtectedRoute";
 
@@ -118,6 +121,11 @@ function AppRoutes() {
                             <MyResumes />
                         </ProtectedRoute>
                     }
+                />
+
+                <Route
+                    path="/"
+                    element={<Landing />}
                 />
 
             </Routes>

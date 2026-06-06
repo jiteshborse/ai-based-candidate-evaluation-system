@@ -5,32 +5,15 @@ import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getJobs } from "../../services/jobService";
 import { generateRanking, getRankings } from "../../services/rankingService";
 
+import toast from "react-hot-toast";
+
 function Rankings() {
     const [jobs, setJobs] = useState([]);
     const [selectedJob, setSelectedJob] = useState("");
     const [rankings, setRankings] = useState([]);
 
-    useEffect(() => {
-        fetchJobs();
-    }, []);
-
-    useEffect(() => {
-        if (!selectedJob) {
-            setRankings([]);
-            return;
-        }
-
-        fetchRankings(selectedJob);
-    }, [selectedJob]);
-
-    const fetchJobs = async () => {
-        const data = await getJobs();
-        setJobs(data.data || []);
-    };
-
     const fetchRankings = async (jobId = selectedJob) => {
         if (!jobId) {
-            setRankings([]);
             return;
         }
 
@@ -40,13 +23,22 @@ function Rankings() {
 
     const handleGenerate = async () => {
         if (!selectedJob) {
-            alert("Select a Job");
+            toast.error("Something went wrong");
             return;
         }
 
         await generateRanking(selectedJob);
         await fetchRankings(selectedJob);
     };
+
+    useEffect(() => {
+        const loadJobs = async () => {
+            const data = await getJobs();
+            setJobs(data.data || []);
+        };
+
+        loadJobs();
+    }, []);
 
     return (
         <DashboardLayout>
@@ -56,7 +48,14 @@ function Rankings() {
                 <select
                     className="border p-2 mr-4"
                     value={selectedJob}
-                    onChange={(e) => setSelectedJob(e.target.value)}
+                    onChange={(e) => {
+                        const nextJobId = e.target.value;
+                        setSelectedJob(nextJobId);
+
+                        if (!nextJobId) {
+                            setRankings([]);
+                        }
+                    }}
                 >
                     <option value="">Select Job</option>
                     {jobs.map((job) => (

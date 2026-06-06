@@ -18,6 +18,8 @@ import {
     useAuth
 } from "../../context/AuthContext";
 
+import toast from "react-hot-toast";
+
 function Register() {
 
     const navigate =
@@ -74,19 +76,14 @@ function Register() {
                     data.user
                 );
 
-                alert(
-                    "Registration Successful"
-                );
+                toast.success("Success");
 
                 navigate("/dashboard");
 
             } catch (error) {
 
-                alert(
-                    error.response
-                        ?.data?.message
-                    ||
-                    "Registration Failed"
+                toast.error(
+                    error.response?.data?.message || "Something went wrong"
                 );
             }
         };

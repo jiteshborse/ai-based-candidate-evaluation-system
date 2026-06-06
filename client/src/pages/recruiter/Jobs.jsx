@@ -8,6 +8,8 @@ import {
     deleteJob
 } from "../../services/jobService";
 
+import toast from "react-hot-toast";
+
 function Jobs() {
 
     const [jobs, setJobs] =
@@ -23,27 +25,18 @@ function Jobs() {
             requiredSkills: ""
         });
 
+    const fetchJobs = async () => {
+        try {
+            const data = await getJobs();
+            setJobs(data.data || []);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
         fetchJobs();
     }, []);
-
-    const fetchJobs =
-        async () => {
-
-            try {
-
-                const data =
-                    await getJobs();
-
-                setJobs(
-                    data.data || []
-                );
-
-            } catch (error) {
-
-                console.error(error);
-            }
-        };
 
     const handleChange =
         (e) => {
@@ -80,9 +73,7 @@ function Jobs() {
                             )
                 });
 
-                alert(
-                    "Job Created"
-                );
+                toast.success("Success");
 
                 setFormData({
 
@@ -97,11 +88,8 @@ function Jobs() {
 
             } catch (error) {
 
-                alert(
-                    error.response
-                        ?.data?.message
-                    ||
-                    "Failed"
+                toast.error(
+                    error.response?.data?.message || "Something went wrong"
                 );
             }
         };

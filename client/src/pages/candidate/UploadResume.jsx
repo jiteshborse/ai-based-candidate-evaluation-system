@@ -9,6 +9,8 @@ import {
     uploadResume
 } from "../../services/resumeService";
 
+import toast from "react-hot-toast";
+
 function UploadResume() {
 
     const [file, setFile] =
@@ -25,9 +27,8 @@ function UploadResume() {
 
             if (!file) {
 
-                return alert(
-                    "Please select a file"
-                );
+                toast.error("Something went wrong");
+                return;
             }
 
             try {
@@ -46,19 +47,14 @@ function UploadResume() {
                     formData
                 );
 
-                alert(
-                    "Resume uploaded successfully"
-                );
+                toast.success("Success");
 
                 setFile(null);
 
             } catch (error) {
 
-                alert(
-                    error.response
-                        ?.data?.message
-                    ||
-                    "Upload failed"
+                toast.error(
+                    error.response?.data?.message || "Something went wrong"
                 );
 
             } finally {
