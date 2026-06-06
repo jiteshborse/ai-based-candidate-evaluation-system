@@ -1,8 +1,10 @@
+import DashboardLayout from "../components/layout/DashboardLayout";
+
 function Dashboard() {
 
     return (
 
-        <div className="p-10">
+        <DashboardLayout>
 
             <h1 className="text-3xl font-bold">
 
@@ -10,7 +12,14 @@ function Dashboard() {
 
             </h1>
 
-        </div>
+            <p className="mt-4">
+
+                Welcome to AI Candidate Evaluation System
+
+            </p>
+
+        </DashboardLayout>
+
     );
 }
 
