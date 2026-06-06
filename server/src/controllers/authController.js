@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Candidate = require("../models/Candidate");
+const Recruiter = require("../models/Recruiter");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken");
 
@@ -37,6 +38,11 @@ exports.register = async (req, res) => {
         if (role === "candidate") {
             await Candidate.create({
                 userId: user._id
+            });
+        } else if (role === "recruiter") {
+            await Recruiter.create({
+                userId: user._id,
+                companyName: name || email.split("@")[0] || "Recruiter"
             });
         }
 

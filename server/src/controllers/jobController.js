@@ -1,12 +1,37 @@
 const JobDescription = require("../models/JobDescription");
 const Recruiter = require("../models/Recruiter");
+const User = require("../models/User");
+
+const getOrCreateRecruiterProfile = async (userId, role) => {
+    let recruiter = await Recruiter.findOne({
+        userId
+    });
+
+    if (recruiter) {
+        return recruiter;
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+        return null;
+    }
+
+    recruiter = await Recruiter.create({
+        userId: user._id,
+        companyName: user.name || role || "Recruiter"
+    });
+
+    return recruiter;
+};
 
 exports.createJob = async (req, res) => {
     try {
 
-        const recruiter = await Recruiter.findOne({
-            userId: req.user.id
-        });
+        const recruiter = await getOrCreateRecruiterProfile(
+            req.user.id,
+            req.user.role
+        );
 
         if (!recruiter) {
             return res.status(404).json({
@@ -103,9 +128,10 @@ exports.updateJob = async (req, res) => {
             });
         }
 
-        const recruiter = await Recruiter.findOne({
-            userId: req.user.id
-        });
+        const recruiter = await getOrCreateRecruiterProfile(
+            req.user.id,
+            req.user.role
+        );
 
         if (
             recruiter &&
@@ -158,9 +184,10 @@ exports.deleteJob = async (req, res) => {
             });
         }
 
-        const recruiter = await Recruiter.findOne({
-            userId: req.user.id
-        });
+        const recruiter = await getOrCreateRecruiterProfile(
+            req.user.id,
+            req.user.role
+        );
 
         if (
             recruiter &&
