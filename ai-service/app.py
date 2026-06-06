@@ -1,3 +1,4 @@
+from ats_engine import *
 from fastapi import FastAPI
 from parser import extract_text
 from matcher import calculate_similarity
@@ -6,6 +7,20 @@ from skill_gap import (
     analyze_skill_gap,
     candidate_readiness,
     generate_recommendations
+)
+
+from explainability import (
+    generate_strengths,
+    generate_weaknesses,
+    recommendation_reason,
+    explain_formula
+)
+
+from recommendation import (
+    generate_recommendation,
+    calculate_confidence,
+    generate_decision,
+    generate_reasons
 )
 
 from resume_analyzer import (
@@ -196,4 +211,186 @@ def analyze_resume(data: dict):
 
         "suggestions":
             suggestions
+    }
+    
+@app.post("/recommendation")
+def recommendation(data: dict):
+
+    final_score = data["finalScore"]
+
+    ats_score = data["atsScore"]
+
+    skill_match = data["skillMatch"]
+
+    experience_score = data["experienceScore"]
+
+    recommendation = generate_recommendation(
+            final_score
+        )
+
+    confidence = calculate_confidence(
+            final_score,
+            ats_score,
+            skill_match
+        )
+
+    decision = generate_decision(
+            recommendation
+        )
+
+    reasons = generate_reasons(
+            final_score,
+            ats_score,
+            skill_match,
+            experience_score
+        )
+
+    return {
+
+        "recommendation":
+            recommendation,
+
+        "confidence":
+            confidence,
+
+        "decision":
+            decision,
+
+        "reasons":
+            reasons
+    }
+    
+@app.post("/explain-ranking")
+def explain_ranking(data: dict):
+
+    strengths = generate_strengths(
+
+        data["skillScore"],
+
+        data["experienceScore"],
+
+        data["educationScore"],
+
+        data["atsScore"]
+    )
+
+    weaknesses = generate_weaknesses(
+
+        data["missingSkills"],
+
+        data["atsScore"]
+    )
+
+    formula = explain_formula(
+
+        data["skillScore"],
+
+        data["experienceScore"],
+
+        data["educationScore"],
+
+        data["keywordSimilarity"]
+    )
+
+    reason = recommendation_reason(
+        data["finalScore"]
+    )
+
+    return {
+
+        "strengths":
+            strengths,
+
+        "weaknesses":
+            weaknesses,
+
+        "scoreBreakdown":
+            formula,
+
+        "recommendationReason":
+            reason
+    }
+    
+@app.post("/ats-score")
+def ats_score(data: dict):
+
+    structure = structure_score(
+        data["sectionsFound"]
+    )
+
+    skills = skill_coverage_score(
+        data["matchedSkills"],
+        data["requiredSkills"]
+    )
+
+    keywords = keyword_score(
+        data["keywordSimilarity"]
+    )
+
+    experience = experience_score(
+        data["experienceMatch"]
+    )
+
+    education = education_score(
+        data["educationMatch"]
+    )
+
+    projects = project_score(
+        data["projectsCount"]
+    )
+
+    certifications = certification_score(
+        data["certificationsCount"]
+    )
+
+    total_score = round(
+
+        structure +
+        skills +
+        keywords +
+        experience +
+        education +
+        projects +
+        certifications
+
+    )
+
+    return {
+
+        "atsScore":
+            total_score,
+
+        "grade":
+            ats_grade(
+                total_score
+            ),
+
+        "atsStatus":
+            ats_status(
+                total_score
+            ),
+
+        "breakdown": {
+
+            "resumeStructure":
+                structure,
+
+            "skillCoverage":
+                skills,
+
+            "keywordOptimization":
+                keywords,
+
+            "experienceRelevance":
+                experience,
+
+            "educationMatch":
+                education,
+
+            "projects":
+                projects,
+
+            "certifications":
+                certifications
+        }
     }

@@ -15,6 +15,48 @@ const rankingSchema =
                 required: true
             },
 
+            recommendationData: {
+
+                recommendation: String,
+
+                confidence: Number,
+
+                decision: String,
+
+                reasons: [String]
+            },
+
+            explanation: {
+
+                strengths: [String],
+
+                weaknesses: [String],
+
+                recommendationReason: String,
+
+                scoreBreakdown: {
+
+                    skillContribution: Number,
+
+                    experienceContribution: Number,
+
+                    educationContribution: Number,
+
+                    keywordContribution: Number
+                }
+            },
+
+            atsAnalysis: {
+
+                atsScore: Number,
+
+                grade: String,
+
+                atsStatus: String,
+
+                breakdown: Object
+            },
+
             resumeId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Resume",

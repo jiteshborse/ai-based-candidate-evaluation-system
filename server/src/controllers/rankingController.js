@@ -13,6 +13,7 @@ const Application =
 const rankingService =
     require("../services/rankingService");
 
+
 function calculateSkillScore(
     candidateSkills,
     requiredSkills
@@ -128,6 +129,42 @@ exports.generateRanking =
                             resume.extractedData.skills,
                             job.requiredSkills
                         );
+
+                const recommendation =
+                    await recommendationService
+                        .getRecommendation(
+
+                            finalScore,
+
+                            resumeAnalysis.atsScore,
+
+                            skillGap.matchPercentage,
+
+                            experienceScore
+
+                        );
+
+                const explanation =
+                    await explainabilityService
+                        .getExplanation({
+
+                            skillScore,
+
+                            experienceScore,
+
+                            educationScore,
+
+                            keywordSimilarity:
+                                similarity,
+
+                            atsScore:
+                                resumeAnalysis.atsScore,
+
+                            finalScore,
+
+                            missingSkills:
+                                skillGap.missingSkills
+                        });
 
                 const educationScore =
                     calculateEducationScore(
