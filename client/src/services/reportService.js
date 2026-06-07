@@ -13,3 +13,8 @@ export const generateReport = async (payload) => {
 
     return response.data;
 };
+
+export const deleteReport = async (id) => {
+    const response = await api.delete(`/reports/${id}`);
+    return response.data;
+};

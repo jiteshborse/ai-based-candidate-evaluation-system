@@ -21,6 +21,9 @@ import Login from
 import Register from
     "../pages/auth/Register";
 
+import ResetPassword from
+    "../pages/auth/ResetPassword";
+
 import Dashboard from
     "../pages/Dashboard";
 
@@ -49,6 +52,11 @@ function AppRoutes() {
                 <Route
                     path="/register"
                     element={<Register />}
+                />
+
+                <Route
+                    path="/reset-password/:token"
+                    element={<ResetPassword />}
                 />
 
                 <Route

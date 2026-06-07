@@ -6,7 +6,7 @@ def calculate_similarity(
     job_text
 ):
 
-    vectorizer = TfidfVectorizer()
+    vectorizer = TfidfVectorizer(stop_words='english')
 
     vectors = vectorizer.fit_transform(
         [

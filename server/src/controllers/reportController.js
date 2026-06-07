@@ -128,3 +128,50 @@ exports.downloadReport =
         }
     };
 
+exports.deleteReport =
+    async (req, res) => {
+
+        try {
+
+            const report =
+                await Report.findById(
+                    req.params.id
+                );
+
+            if (!report) {
+
+                return res.status(404).json({
+                    success: false,
+                    message: "Report not found"
+                });
+            }
+
+            if (report.generatedBy.toString() !== req.user.id && req.user.role !== "admin") {
+
+                return res.status(403).json({
+                    success: false,
+                    message: "Access denied: You can only delete your own reports"
+                });
+            }
+
+            const fs = require("fs");
+            if (report.reportUrl && fs.existsSync(report.reportUrl)) {
+                fs.unlinkSync(report.reportUrl);
+            }
+
+            await report.deleteOne();
+
+            res.status(200).json({
+                success: true,
+                message: "Report deleted successfully"
+            });
+
+        } catch (error) {
+
+            res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
+    };
+

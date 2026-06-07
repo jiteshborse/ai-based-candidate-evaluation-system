@@ -96,8 +96,10 @@ const rankingSchema =
             recommendation: {
                 type: String,
                 enum: [
+                    "Strong Hire",
                     "Highly Recommended",
                     "Recommended",
+                    "Average Match",
                     "Average",
                     "Not Recommended"
                 ],

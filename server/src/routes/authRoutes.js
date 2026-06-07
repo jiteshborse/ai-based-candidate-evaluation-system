@@ -2,7 +2,9 @@ const express = require("express");
 
 const {
     register,
-    login
+    login,
+    forgotPassword,
+    resetPassword
 } = require("../controllers/authController");
 
 const {
@@ -35,5 +37,21 @@ router.post(
     register
 );
 router.post("/login", login);
+
+router.post(
+    "/forgot-password",
+    [
+        body("email").isEmail()
+    ],
+    forgotPassword
+);
+
+router.post(
+    "/reset-password/:token",
+    [
+        body("password").isLength({ min: 6 })
+    ],
+    resetPassword
+);
 
 module.exports = router;

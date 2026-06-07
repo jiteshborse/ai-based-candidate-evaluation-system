@@ -55,9 +55,17 @@ exports.getDashboardStats =
             const recStatsRaw = await Ranking.aggregate([
                 { $group: { _id: "$recommendation", count: { $sum: 1 } } }
             ]);
-            const recommendationStats = ["Highly Recommended", "Recommended", "Average", "Not Recommended"].map(name => {
-                const match = recStatsRaw.find(item => item._id === name);
-                return { name, value: match ? match.count : 0 };
+            const recommendationStats = ["Strong Hire", "Highly Recommended", "Recommended", "Average Match", "Not Recommended"].map(name => {
+                let count = 0;
+                if (name === "Average Match") {
+                    const match1 = recStatsRaw.find(item => item._id === "Average Match");
+                    const match2 = recStatsRaw.find(item => item._id === "Average");
+                    count = (match1 ? match1.count : 0) + (match2 ? match2.count : 0);
+                } else {
+                    const match = recStatsRaw.find(item => item._id === name);
+                    count = match ? match.count : 0;
+                }
+                return { name, value: count };
             });
 
             res.status(200).json({

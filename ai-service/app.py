@@ -449,30 +449,28 @@ def compare_candidates(
 ):
 
     candidate_a = data["candidateA"]
-
     candidate_b = data["candidateB"]
+    
+    name_a = candidate_a.get("name", "Candidate A")
+    name_b = candidate_b.get("name", "Candidate B")
 
     score_a = overall_candidate_score(
-
             candidate_a["finalScore"],
-
             candidate_a["atsScore"],
-
             candidate_a["confidence"]
         )
 
     score_b = overall_candidate_score(
-
             candidate_b["finalScore"],
-
             candidate_b["atsScore"],
-
             candidate_b["confidence"]
         )
 
     winner = determine_winner(
             score_a,
-            score_b
+            score_b,
+            name_a,
+            name_b
         )
 
     advantages = compare_advantages(

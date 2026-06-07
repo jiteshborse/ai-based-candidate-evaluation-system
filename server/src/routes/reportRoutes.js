@@ -16,7 +16,9 @@ const {
 
     getReports,
 
-    downloadReport
+    downloadReport,
+
+    deleteReport
 
 }
     =
@@ -48,6 +50,16 @@ router.get(
     "/download/:id",
     auth,
     downloadReport
+);
+
+router.delete(
+    "/:id",
+    auth,
+    role(
+        "admin",
+        "recruiter"
+    ),
+    deleteReport
 );
 
 module.exports = router;
